@@ -4,6 +4,9 @@ __generated_with = "0.17.8"
 app = marimo.App(width="medium")
 
 with app.setup:
+    from collections.abc import Sequence
+    from typing import Any
+
     import marimo as mo
     import plotly.express as px
     import polars as pl
@@ -367,7 +370,11 @@ def _():
 
 
 @app.function
-def get_extremes(selection, col, defaults_if_missing):
+def get_extremes(
+    selection: Sequence[Any] | None,
+    col: int | str,
+    defaults_if_missing: tuple[float, float],
+) -> tuple[float, float]:
     """
     Extract the minimum and maximum values from a specific column in a selection.
 
@@ -376,14 +383,14 @@ def get_extremes(selection, col, defaults_if_missing):
     default values and prints a warning message.
 
     Args:
-        selection (list): A list of rows where each row is indexable (e.g., list, tuple).
-                         Can be None or empty.
-        col (int): The column index to extract values from in each row.
-        defaults_if_missing (tuple[int, int]): A tuple containing (min_default, max_default)
+        selection (Sequence[Any] | None): A sequence of rows where each row is indexable
+                         (e.g., list, tuple, dict). Can be None or empty.
+        col (int | str): The column index or key to extract values from in each row.
+        defaults_if_missing (tuple[float, float]): A tuple containing (min_default, max_default)
                                               to return when selection is invalid.
 
     Returns:
-        tuple[int, int]: A tuple containing (minimum_value, maximum_value) from the specified
+        tuple[float, float]: A tuple containing (minimum_value, maximum_value) from the specified
                         column, or the default values if the selection is invalid.
 
     Example:
